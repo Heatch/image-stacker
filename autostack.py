@@ -41,20 +41,36 @@ image_editable = ImageDraw.Draw(target_vertical)
 currentYear = datetime.now().year
 startYear = currentYear - len(imgs) + 1
 yearTitle = ImageFont.truetype('Ubuntu-Regular.ttf', 100)
-stroke_color = (200, 222, 200)
+baby_blue = (137, 207, 240)  # Baby blue color
+rich_blue = (0, 51, 102)     # Dark rich blue color
 
 i = 0
 pos = 0
+padding = 15  # Padding around text
+vertical_adjustment = 20  # Pixels to move text upward
+highlight_padding = 25  # Additional padding for highlight box
 while i < len(imgs):
     title_text = str(startYear + i)
     # Calculate text size
     text_bbox = image_editable.textbbox((0, 0), title_text, font=yearTitle)
     text_width = text_bbox[2] - text_bbox[0]
     text_height = text_bbox[3] - text_bbox[1]
-    # Position text at bottom left with padding
-    x = 15
-    y = pos + 864 - text_height - 35  # 15 pixels padding from bottom
-    image_editable.text((x, y), title_text, (28, 3, 61), font=yearTitle, stroke_width=5, stroke_fill=stroke_color)
+    # Position text at bottom left with padding, 20 pixels higher
+    x = padding
+    y = pos + 864 - text_height - padding - vertical_adjustment  # 20 pixels higher
+    
+    # Draw highlight rectangle with increased size
+    highlight_bbox = [
+        x - highlight_padding,
+        y - highlight_padding,
+        x + text_width + highlight_padding,
+        y + text_height + highlight_padding
+    ]
+    image_editable.rectangle(highlight_bbox, fill=rich_blue)
+    
+    # Draw text
+    image_editable.text((x, y), title_text, baby_blue, font=yearTitle)
+    
     i += 1
     pos += 864
 
